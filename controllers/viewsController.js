@@ -136,3 +136,7 @@ export const bookingConfirmationPage = async (req, res, next) => {
     next(err);
   }
 };
+
+export const showRegistrationPage = async (req, res) => {
+  res.render("register", { title: "User Registration" });
+}

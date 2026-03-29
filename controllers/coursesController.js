@@ -9,7 +9,7 @@ export const listCourses = async (req, res) => {
 
 export const createCourseHandler = async (req, res, next) => {
   try {
-    const course = await courseService.createCourse(req.body);
+    const course = await createCourse(req.body);
     res.status(201).json({ course });
   } catch (err) {
     res.status(400).json({ error: err.message });
