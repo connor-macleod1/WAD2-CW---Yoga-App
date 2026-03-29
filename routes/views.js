@@ -8,7 +8,7 @@ import {
   bookingConfirmationPage,
 } from "../controllers/viewsController.js";
 
-import { coursesListPage } from "../controllers/coursesListController.js";
+import { coursesListPage } from "../controllers/coursesController.js";
 
 const router = Router();
 
