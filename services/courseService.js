@@ -23,17 +23,14 @@ const fmtDateTime = (iso) =>
       })
     : "TBA";
 
-function buildLink(req, page, pageSize) {
-  const url = new URL(
-    `${req.protocol}://${req.get("host")}${req.originalUrl.split("?")[0]}`
-  );
-  const params = new URLSearchParams(req.query);
+function buildLink(basePath, query, page, pageSize) {
+  const params = new URLSearchParams(query);
   params.set("page", String(page));
   params.set("pageSize", String(pageSize));
-  return `${url.pathname}?${params.toString()}`;
+  return `${basePath}?${params.toString()}`;
 }
 
-export async function searchCourses(filters, req) {
+export async function searchCourses(filters, basePath) {
   const { level, type, dropin, q, page = "1", pageSize = "10" } = filters;
 
   // Build database predicate
@@ -103,9 +100,43 @@ export async function searchCourses(filters, req) {
     totalPages,
     hasPrev: p > 1,
     hasNext: p < totalPages,
-    prevLink: p > 1 ? buildLink(req, p - 1, ps) : null,
-    nextLink: p < totalPages ? buildLink(req, p + 1, ps) : null,
+    prevLink: p > 1 ? buildLink(basePath, p - 1, ps) : null,
+    nextLink: p < totalPages ? buildLink(basePath, p + 1, ps) : null,
   };
 
   return { courses: cards, pagination };
+}
+
+export async function createCourse(body) {
+  const { title, level, type, allowDropIn, startDate, endDate, description, instructorId } = body;
+
+  // Validate required fields
+  if (!title || typeof title !== "string" || title.trim() === "") {
+    throw new Error("Course title is required.");
+  }
+  if (!["beginner", "intermediate", "advanced"].includes(level)) {
+    throw new Error("Level must be beginner, intermediate, or advanced.");
+  }
+  if (!["WEEKLY_BLOCK", "WEEKEND_WORKSHOP"].includes(type)) {
+    throw new Error("Type must be WEEKLY_BLOCK or WEEKEND_WORKSHOP.");
+  }
+
+  // Build a clean known-shape object
+  const courseData = {
+    title: title.trim(),
+    level,
+    type,
+    allowDropIn: allowDropIn === true || allowDropIn === "true",
+    startDate: startDate || null,
+    endDate: endDate || null,
+    description: description?.trim() || "",
+    instructorId: instructorId || null,
+    sessionIds: [],
+  };
+
+  try {
+  return await CourseModel.create(courseData);
+} catch (err) {
+  throw new Error(`Failed to create course: ${err.message}`);
+}
 }
