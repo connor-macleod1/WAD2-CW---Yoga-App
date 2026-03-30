@@ -12,7 +12,7 @@ import courseRoutes from "./routes/courses.js";
 import sessionRoutes from "./routes/sessions.js";
 import bookingRoutes from "./routes/bookings.js";
 import viewRoutes from "./routes/views.js";
-import { attachDemoUser } from "./middlewares/demoUser.js";
+import { attachCurrentUser } from "./middlewares/currentUser.js";
 import { initDb } from "./models/_db.js";
 import userRoutes from "./routes/users.js";
 
@@ -46,8 +46,8 @@ app.use(session({
 // Static
 app.use("/static", express.static(path.join(__dirname, "public")));
 
-// Demo user
-//app.use(attachDemoUser);
+// Current user
+app.use(attachCurrentUser);
 
 // Health
 app.get("/health", (req, res) => res.json({ ok: true }));

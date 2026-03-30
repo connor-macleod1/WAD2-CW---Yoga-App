@@ -4,17 +4,6 @@
 <div class="wrap">
   <h1>Upcoming Courses</h1>
 
-   <div class="text-end" style="margin-bottom: 1em">
-      {{^user}}
-      <a id="login" href="/register" class="btn btn-primary"> Register </a>
-      <a id="login" href="/login" class="btn btn-primary"> Sign in </a>
-      {{/user}}
-      {{#user}}
-      <a id="logout" href="/logout" class="btn btn-primary"> Sign out </a>
-      {{/user}}
-    </div>
-
-
   <div class="cards">
     {{#courses}}
     <article class="card">
