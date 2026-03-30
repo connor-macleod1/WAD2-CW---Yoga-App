@@ -9,8 +9,8 @@ export async function registerUser(name, email, role, password) {
   if (password.length < 8) {
     throw new Error("Password must be at least 8 characters.");
   }
-  if (!["student", "instructor"].includes(role)) {
-    throw new Error("Role must be student or instructor.");
+  if (!["user", "organiser"].includes(role)) {
+    throw new Error("Role must be user or organiser.");
   }
 
   // Check for existing user

@@ -15,7 +15,7 @@ import viewRoutes from "./routes/views.js";
 import { attachCurrentUser } from "./middlewares/currentUser.js";
 import { initDb } from "./models/_db.js";
 import userRoutes from "./routes/users.js";
-
+import organiserRoutes from "./routes/organiser.js";
 
 dotenv.config();
 
@@ -52,8 +52,6 @@ app.use(attachCurrentUser);
 // Health
 app.get("/health", (req, res) => res.json({ ok: true }));
 
-
-
 // JSON API routes
 // app.use('/auth', authRoutes);
 app.use("/api/courses", courseRoutes);
@@ -65,6 +63,8 @@ app.use("/", viewRoutes);
 
 
 app.use("/", userRoutes);
+app.use("/organiser", organiserRoutes);
+
 // Errors
 export const not_found = (req, res) =>
   res.status(404).type("text/plain").send("404 Not found.");
