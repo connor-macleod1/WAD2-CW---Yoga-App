@@ -19,8 +19,16 @@ export const post_login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await loginUser(email, password);
+
+    // Store user ID in session
     req.session.userId = user._id;
-    res.redirect("/");
+
+    // Redirect based on role
+    if (user.role === "organiser") {
+      return res.redirect("/organiser"); // organiser dashboard
+    } else {
+      return res.redirect("/"); // standard user homepage
+    }
   } catch (err) {
     res.status(401).render("login", {
       title: "Sign In",

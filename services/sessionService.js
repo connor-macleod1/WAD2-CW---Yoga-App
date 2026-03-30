@@ -41,3 +41,42 @@ export async function createSession(body) {
 
   return SessionModel.create(sessionData);
 }
+
+export async function deleteSession(id) {
+  if (!id) throw new Error("Session ID is required.");
+
+  const session = await SessionModel.findById(id);
+  if (!session) throw new Error("Session not found.");
+
+  return SessionModel.delete(id);
+}
+
+export async function getSessionById(id) {
+  if (!id) throw new Error("Session ID is required.");
+
+  const session = await SessionModel.findById(id);
+  if (!session) throw new Error("Session not found.");
+
+  return session;
+}
+
+export async function updateSession(id, body) {
+  if (!id) throw new Error("Session ID is required.");
+
+  const session = await SessionModel.findById(id);
+  if (!session) throw new Error("Session not found.");
+
+  // Optional: validate or sanitize fields from body
+  const updatedData = {
+    startDateTime: body.startDateTime ?? session.startDateTime,
+    endDateTime: body.endDateTime ?? session.endDateTime,
+    capacity: body.capacity != null ? Number(body.capacity) : session.capacity,
+    // add other session fields if necessary
+  };
+
+  // Validate that start < end
+  if (new Date(updatedData.startDateTime) >= new Date(updatedData.endDateTime)) {
+    throw new Error("Start date and time must be before end date and time.");
+  }
+    return SessionModel.update(id, updatedData);
+}

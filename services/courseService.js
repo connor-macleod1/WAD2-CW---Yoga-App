@@ -140,3 +140,43 @@ export async function createCourse(body) {
   throw new Error(`Failed to create course: ${err.message}`);
 }
 }
+
+
+export async function deleteCourse(id) {
+  if (!id) throw new Error("Course ID is required.");
+
+  const course = await CourseModel.findById(id);
+  if (!course) throw new Error("Course not found.");
+
+  return CourseModel.delete(id);
+}
+
+export async function getCourseById(id) {
+  if (!id) throw new Error("Course ID is required.");
+
+  const course = await CourseModel.findById(id);
+  if (!course) throw new Error("Course not found.");
+
+  return course;
+}
+
+export async function listCourses() {
+  return CourseModel.list();
+}
+
+export async function updateCourse(id, body) {
+  if (!id) throw new Error("Course ID is required.");
+
+  const course = await CourseModel.findById(id);
+  if (!course) throw new Error("Course not found.");
+
+  // Optionally, validate fields here if needed
+  const updatedData = {
+    name: body.name ?? course.name,
+    description: body.description ?? course.description,
+    duration: body.duration ?? course.duration,
+    // add other course fields as necessary
+  };
+
+  return CourseModel.update(id, updatedData);
+}

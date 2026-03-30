@@ -26,7 +26,7 @@
           <th>Drop-in</th>
           <th>Start</th>
           <th>End</th>
-          <th></th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -38,10 +38,10 @@
           <td>{{startDate}}</td>
           <td>{{endDate}}</td>
           <td>
-            <a href="/organiser/courses/{{_id}}/edit" class="btn">Edit</a>
-            <a href="/organiser/courses/{{_id}}/sessions/new" class="btn">Add Session</a>
-            <form method="post" action="/organiser/courses/{{_id}}/delete" style="display:inline">
-              <button class="btn" type="submit">Delete</button>
+            <a href="/organiser/courses/{{_id}}/edit" class="btn warning">Edit</a>
+            <a href="/organiser/courses/{{_id}}/sessions/new" class="btn success">Add Session</a>
+            <form method="post" action="/organiser/courses/{{_id}}/delete" style="display:inline;">
+              <button class="btn danger" type="submit" onclick="return confirm('Delete this course?');">Delete</button>
             </form>
           </td>
         </tr>

@@ -7,12 +7,12 @@ import {
   postNewCourse,
   getEditCoursePage,
   postEditCourse,
-  deleteCourse,
+  deleteCourseHandler,
   getNewSessionPage,
   postNewSession,
   getEditSessionPage,
   postEditSession,
-  deleteSession,
+  deleteSessionHandler,
 } from "../controllers/organiserController.js";
 
 const router = Router();
@@ -28,13 +28,13 @@ router.get("/courses/new", getNewCoursePage);
 router.post("/courses/new", postNewCourse);
 router.get("/courses/:id/edit", getEditCoursePage);
 router.post("/courses/:id/edit", postEditCourse);
-router.post("/courses/:id/delete", deleteCourse);
+router.post("/courses/:id/delete", deleteCourseHandler);
 
 // sessions
 router.get("/courses/:courseId/sessions/new", getNewSessionPage);
 router.post("/courses/:courseId/sessions/new", postNewSession);
 router.get("/sessions/:id/edit", getEditSessionPage);
 router.post("/sessions/:id/edit", postEditSession);
-router.post("/sessions/:id/delete", deleteSession);
+router.post("/sessions/:id/delete", deleteSessionHandler);
 
 export default router;
