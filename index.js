@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import mustacheExpress from "mustache-express";
 import path from "path";
 import { fileURLToPath } from "url";
+import session from "express-session";
 
 // import authRoutes from './routes/auth.js';
 import courseRoutes from "./routes/courses.js";
@@ -13,6 +14,8 @@ import bookingRoutes from "./routes/bookings.js";
 import viewRoutes from "./routes/views.js";
 import { attachDemoUser } from "./middlewares/demoUser.js";
 import { initDb } from "./models/_db.js";
+import userRoutes from "./routes/users.js";
+
 
 dotenv.config();
 
@@ -34,14 +37,22 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 
+app.use(session({
+  secret: process.env.SESSION_SECRET || "dev-secret",
+  resave: false,
+  saveUninitialized: false,
+}));
+
 // Static
 app.use("/static", express.static(path.join(__dirname, "public")));
 
 // Demo user
-app.use(attachDemoUser);
+//app.use(attachDemoUser);
 
 // Health
 app.get("/health", (req, res) => res.json({ ok: true }));
+
+
 
 // JSON API routes
 // app.use('/auth', authRoutes);
@@ -52,6 +63,8 @@ app.use("/api/bookings", bookingRoutes);
 // SSR view routes
 app.use("/", viewRoutes);
 
+
+app.use("/", userRoutes);
 // Errors
 export const not_found = (req, res) =>
   res.status(404).type("text/plain").send("404 Not found.");

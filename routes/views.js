@@ -7,6 +7,7 @@ import {
   postBookSession,
   bookingConfirmationPage,
   showRegistrationPage,
+  showLoginPage,
 } from "../controllers/viewsController.js";
 
 import { coursesListPage } from "../controllers/coursesController.js";
@@ -20,4 +21,5 @@ router.post("/courses/:id/book", postBookCourse);
 router.post("/sessions/:id/book", postBookSession);
 router.get("/bookings/:bookingId", bookingConfirmationPage);
 router.get("/register", showRegistrationPage);
+router.get("/login", showLoginPage);
 export default router;

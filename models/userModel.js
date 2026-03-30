@@ -1,48 +1,34 @@
-
 // models/userModel.js
 import { usersDb } from './_db.js';
-// import Datastore from "nedb-promises";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt';
 
-const saltRounds = 10;
+const SALT_ROUNDS = 10;
 
 export const UserModel = {
-  async create(user, email, password) {
-    const hash = await bcrypt.hash(password, saltRounds);
-
+  async create(name, email, role, password) {
+    const hash = await bcrypt.hash(password, SALT_ROUNDS);
     const entry = {
-      user: user,
-      email: email,
+      name,
+      email,
+      role,
       password: hash,
     };
-    console.log("creating user ${user} with hashed password");
-    try{
-      const doc = await this.usersDb.insert(entry);
-      return doc;
-    } catch (err) {
-      console.error("Error creating user ${user}:", err);
-      throw err;
-    }
-    
+    return usersDb.insert(entry);
   },
-
-async findByUser(user) {
-    try {
-      const entries = await this.db.find({ user: user });
-      return entries; // returns an array
-    } catch (err) {
-      console.error("Error looking up user:", err);
-      throw err;
-    }
-  },
-
 
   async findByEmail(email) {
     return usersDb.findOne({ email });
   },
+
   async findById(id) {
     return usersDb.findOne({ _id: id });
+  },
+
+  async findByName(name) {
+    return usersDb.find({ name });
+  },
+
+  async verifyPassword(plainText, hashedPassword) {
+    return bcrypt.compare(plainText, hashedPassword);
   }
 };
-
-export default UserModel;

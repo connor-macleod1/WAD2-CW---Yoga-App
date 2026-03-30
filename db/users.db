@@ -1,3 +1,4 @@
 {"name":"Fiona","email":"fiona@student.local","role":"student","_id":"cqhGQKxArmgTO1Se"}
+{"name":"Connor","email":"connor@mail.com","role":"student","password":"$2b$10$b9leY0iDXMMOZBKdmwJZOe/OjibdJHeT3WbYBHBUWF/lMuXKqpyZ6","_id":"gScnGq4Pc4gDyQHr"}
 {"$$indexCreated":{"fieldName":"email","unique":true,"sparse":false}}
-{"$$indexCreated":{"fieldName":"email","unique":true}}
+{"name":"javier","email":"javi@mail.net","role":"student","password":"$2b$10$KzP0eS3V5mMHEUjcSaqBAuLCH/DPvOyGBhsvT3OLq8XBMXSiUAccW","_id":"KSR3TjbedSaaRjqQ"}
