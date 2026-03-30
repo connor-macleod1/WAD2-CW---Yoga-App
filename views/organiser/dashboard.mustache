@@ -1,0 +1,58 @@
+{{> head}}
+{{> header}}
+
+<div class="wrap">
+  <h1>{{ title }}</h1>
+
+  {{#errors}}
+  <div class="alert error" role="alert">
+    <p>{{message}}</p>
+  </div>
+  {{/errors}}
+
+  <section>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h2>Courses</h2>
+      <a href="/organiser/courses/new" class="btn primary">Add Course</a>
+    </div>
+
+    {{#courses}}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Level</th>
+          <th>Type</th>
+          <th>Drop-in</th>
+          <th>Start</th>
+          <th>End</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{title}}</td>
+          <td>{{level}}</td>
+          <td>{{type}}</td>
+          <td>{{#allowDropIn}}Yes{{/allowDropIn}}{{^allowDropIn}}No{{/allowDropIn}}</td>
+          <td>{{startDate}}</td>
+          <td>{{endDate}}</td>
+          <td>
+            <a href="/organiser/courses/{{_id}}/edit" class="btn">Edit</a>
+            <a href="/organiser/courses/{{_id}}/sessions/new" class="btn">Add Session</a>
+            <form method="post" action="/organiser/courses/{{_id}}/delete" style="display:inline">
+              <button class="btn" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    {{/courses}}
+
+    {{^courses}}
+    <p class="muted">No courses yet. Add one above.</p>
+    {{/courses}}
+  </section>
+</div>
+
+{{> footer}}

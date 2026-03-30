@@ -1,0 +1,90 @@
+{{> head}}
+{{> header}}
+
+<div class="wrap">
+  <h1>{{ title }}</h1>
+
+  {{#errors}}
+  <div class="alert error" role="alert">
+    <p>{{message}}</p>
+  </div>
+  {{/errors}}
+
+  <form method="post" action="{{action}}">
+    <div class="field">
+      <label for="title">Course Title</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        value="{{course.title}}"
+        placeholder="Enter course title"
+        required
+      />
+    </div>
+
+    <div class="field">
+      <label for="level">Level</label>
+      <select id="level" name="level" required>
+        <option value="">Select a level</option>
+        <option value="beginner" {{#course.isBeginnerLevel}}selected{{/course.isBeginnerLevel}}>Beginner</option>
+        <option value="intermediate" {{#course.isIntermediateLevel}}selected{{/course.isIntermediateLevel}}>Intermediate</option>
+        <option value="advanced" {{#course.isAdvancedLevel}}selected{{/course.isAdvancedLevel}}>Advanced</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="type">Type</label>
+      <select id="type" name="type" required>
+        <option value="">Select a type</option>
+        <option value="WEEKLY_BLOCK" {{#course.isWeeklyBlock}}selected{{/course.isWeeklyBlock}}>Weekly Block</option>
+        <option value="WEEKEND_WORKSHOP" {{#course.isWeekendWorkshop}}selected{{/course.isWeekendWorkshop}}>Weekend Workshop</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="allowDropIn">Allow Drop-ins</label>
+      <select id="allowDropIn" name="allowDropIn">
+        <option value="false" {{^course.allowDropIn}}selected{{/course.allowDropIn}}>No</option>
+        <option value="true" {{#course.allowDropIn}}selected{{/course.allowDropIn}}>Yes</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="startDate">Start Date</label>
+      <input
+        type="date"
+        id="startDate"
+        name="startDate"
+        value="{{course.startDate}}"
+      />
+    </div>
+
+    <div class="field">
+      <label for="endDate">End Date</label>
+      <input
+        type="date"
+        id="endDate"
+        name="endDate"
+        value="{{course.endDate}}"
+      />
+    </div>
+
+    <div class="field">
+      <label for="description">Description</label>
+      <textarea
+        id="description"
+        name="description"
+        rows="4"
+        placeholder="Enter course description"
+      >{{course.description}}</textarea>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn primary">Save Course</button>
+      <a href="/organiser" class="btn">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{{> footer}}

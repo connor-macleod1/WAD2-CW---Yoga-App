@@ -1,0 +1,56 @@
+{{> head}}
+{{> header}}
+
+<div class="wrap">
+  <h1>{{ title }}</h1>
+
+  {{#errors}}
+  <div class="alert error" role="alert">
+    <p>{{message}}</p>
+  </div>
+  {{/errors}}
+
+  <form method="post" action="{{action}}">
+    <div class="field">
+      <label for="startDateTime">Start Date and Time</label>
+      <input
+        type="datetime-local"
+        id="startDateTime"
+        name="startDateTime"
+        value="{{session.startDateTime}}"
+        required
+      />
+    </div>
+
+    <div class="field">
+      <label for="endDateTime">End Date and Time</label>
+      <input
+        type="datetime-local"
+        id="endDateTime"
+        name="endDateTime"
+        value="{{session.endDateTime}}"
+        required
+      />
+    </div>
+
+    <div class="field">
+      <label for="capacity">Capacity</label>
+      <input
+        type="number"
+        id="capacity"
+        name="capacity"
+        value="{{session.capacity}}"
+        min="1"
+        placeholder="Enter maximum capacity"
+        required
+      />
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn primary">Save Class</button>
+      <a href="/organiser" class="btn">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{{> footer}}
