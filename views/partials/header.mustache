@@ -12,6 +12,9 @@
       <form method="post" action="/logout" style="display:inline">
         <button class="btn" type="submit">Sign out</button>
       </form>
+    {{#isOrganiser}}
+      <a href="/organiser" class="btn">Dashboard</a>
+    {{/isOrganiser}}
     </div>
     {{/user}}
     {{^user}}
