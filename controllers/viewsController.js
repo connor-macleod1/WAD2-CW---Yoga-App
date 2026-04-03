@@ -1,6 +1,8 @@
 // controllers/viewsController.js
-import { CourseModel } from "../models/courseModel.js";
-import { SessionModel } from "../models/sessionModel.js";
+import {
+  getHomePageData,
+  getCourseDetailData,
+} from "../services/viewsService.js";
 import {
   bookCourseForUser,
   bookSessionForUser,
@@ -16,35 +18,11 @@ const fmtDate = (iso) =>
     hour: "2-digit",
     minute: "2-digit",
   });
-const fmtDateOnly = (iso) =>
-  new Date(iso).toLocaleDateString("en-GB", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
 
 export const homePage = async (req, res, next) => {
   try {
-    const courses = await CourseModel.list();
-    const cards = await Promise.all(
-      courses.map(async (c) => {
-        const sessions = await SessionModel.listByCourse(c._id);
-        const nextSession = sessions[0];
-        return {
-          id: c._id,
-          title: c.title,
-          level: c.level,
-          type: c.type,
-          allowDropIn: c.allowDropIn,
-          startDate: c.startDate ? fmtDateOnly(c.startDate) : "",
-          endDate: c.endDate ? fmtDateOnly(c.endDate) : "",
-          nextSession: nextSession ? fmtDate(nextSession.startDateTime) : "TBA",
-          sessionsCount: sessions.length,
-          description: c.description,
-        };
-      })
-    );
-    res.render("home", { title: "Yoga Courses", courses: cards });
+    const courses = await getHomePageData();
+    res.render("home", { title: "Yoga Courses", courses });
   } catch (err) {
     next(err);
   }
@@ -52,56 +30,50 @@ export const homePage = async (req, res, next) => {
 
 export const courseDetailPage = async (req, res, next) => {
   try {
-    const courseId = req.params.id;
-    const course = await CourseModel.findById(courseId);
-    if (!course)
-      return res
-        .status(404)
-        .render("error", { title: "Not found", message: "Course not found" });
-
-    const sessions = await SessionModel.listByCourse(courseId);
-    const rows = sessions.map((s) => ({
-      id: s._id,
-      start: fmtDate(s.startDateTime),
-      end: fmtDate(s.endDateTime),
-      capacity: s.capacity,
-      booked: s.bookedCount ?? 0,
-      remaining: Math.max(0, (s.capacity ?? 0) - (s.bookedCount ?? 0)),
-    }));
-
+    const { course, sessions } = await getCourseDetailData(req.params.id);
     res.render("course", {
       title: course.title,
-      course: {
-        id: course._id,
-        title: course.title,
-        level: course.level,
-        type: course.type,
-        allowDropIn: course.allowDropIn,
-        startDate: course.startDate ? fmtDateOnly(course.startDate) : "",
-        endDate: course.endDate ? fmtDateOnly(course.endDate) : "",
-        description: course.description,
-      },
-      sessions: rows,
+      course,
+      sessions,
     });
   } catch (err) {
+    if (err.message === "Course not found") {
+      return res.status(404).render("error", {
+        title: "Not found",
+        message: "Course not found",
+      });
+    }
     next(err);
   }
 };
 
 export const postBookCourse = async (req, res, next) => {
   try {
+    if (req.user.role === "organiser") {
+      return res.status(403).render("error", {
+        title: "Forbidden",
+        message: "Organisers cannot book courses.",
+      });
+    }
     const courseId = req.params.id;
     const booking = await bookCourseForUser(req.user._id, courseId);
     res.redirect(`/bookings/${booking._id}?status=${booking.status}`);
   } catch (err) {
-    res
-      .status(400)
-      .render("error", { title: "Booking failed", message: err.message });
+    res.status(400).render("error", {
+      title: "Booking failed",
+      message: err.message,
+    });
   }
 };
 
 export const postBookSession = async (req, res, next) => {
   try {
+    if (req.user.role === "organiser") {
+      return res.status(403).render("error", {
+        title: "Forbidden",
+        message: "Organisers cannot book sessions.",
+      });
+    }
     const sessionId = req.params.id;
     const booking = await bookSessionForUser(req.user._id, sessionId);
     res.redirect(`/bookings/${booking._id}?status=${booking.status}`);
@@ -119,16 +91,22 @@ export const bookingConfirmationPage = async (req, res, next) => {
     const bookingId = req.params.bookingId;
     const booking = await BookingModel.findById(bookingId);
     if (!booking)
-      return res
-        .status(404)
-        .render("error", { title: "Not found", message: "Booking not found" });
+      return res.status(404).render("error", {
+        title: "Not found",
+        message: "Booking not found",
+      });
+
+    const allowedStatuses = ["CONFIRMED", "WAITLISTED", "CANCELLED"];
+    const status = allowedStatuses.includes(req.query.status)
+      ? req.query.status
+      : booking.status;
 
     res.render("booking_confirmation", {
       title: "Booking confirmation",
       booking: {
         id: booking._id,
         type: booking.type,
-        status: req.query.status || booking.status,
+        status,
         createdAt: booking.createdAt ? fmtDate(booking.createdAt) : "",
       },
     });

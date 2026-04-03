@@ -13,6 +13,8 @@ import {
   getEditSessionPage,
   postEditSession,
   deleteSessionHandler,
+  organiserCourseDetail, 
+  getParticipantList,
 } from "../controllers/organiserController.js";
 
 const router = Router();
@@ -22,7 +24,7 @@ router.use(requireOrganiser);
 
 // Dashboard
 router.get("/", organiserDashboard);
-
+router.get("/courses/:id", organiserCourseDetail);
 // Courses
 router.get("/courses/new", getNewCoursePage);
 router.post("/courses/new", postNewCourse);
@@ -36,5 +38,6 @@ router.post("/courses/:courseId/sessions/new", postNewSession);
 router.get("/sessions/:id/edit", getEditSessionPage);
 router.post("/sessions/:id/edit", postEditSession);
 router.post("/sessions/:id/delete", deleteSessionHandler);
+router.get("/sessions/:id/participants", getParticipantList);
 
 export default router;

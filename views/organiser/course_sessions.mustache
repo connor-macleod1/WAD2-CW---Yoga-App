@@ -13,39 +13,48 @@
     </a>
   </div>
 
-  {{#sessions}}
+  {{#hasSessions}}
   <table class="table">
     <thead>
       <tr>
         <th>Start</th>
         <th>End</th>
+        <th>Duration</th>      
+        <th>Location</th>
+        <th>Price</th>
         <th>Capacity</th>
+        <th>Booked</th>
+        <th>Remaining</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       {{#sessions}}
       <tr>
-        <td>{{startDateTime}}</td>
-        <td>{{endDateTime}}</td>
+        <td>{{start}}</td>
+        <td>{{end}}</td>
+        <td>{{duration}}</td>
+        <td>{{location}}</td>
+        <td>£{{price}}</td>
         <td>{{capacity}}</td>
+        <td>{{booked}}</td>
+        <td>{{remaining}}</td>
         <td>
-          <a href="/organiser/sessions/{{_id}}/edit" class="btn">Edit</a>
-          <form method="post" action="/organiser/sessions/{{_id}}/delete" style="display:inline;">
-            <button class="btn danger" type="submit" onclick="return confirm('Delete this session?');">
-              Delete
-            </button>
+          <a href="/organiser/sessions/{{id}}/edit" class="btn">Edit</a>
+          <a href="/organiser/sessions/{{id}}/participants" class="btn">Class List</a>
+          <form method="post" action="/organiser/sessions/{{id}}/delete" style="display:inline;">
+            <button class="btn" type="submit">Delete</button>
           </form>
         </td>
       </tr>
       {{/sessions}}
     </tbody>
   </table>
-  {{/sessions}}
+  {{/hasSessions}}
 
-  {{^sessions}}
+  {{^hasSessions}}
   <p class="muted">No sessions for this course yet.</p>
-  {{/sessions}}
+  {{/hasSessions}}
 
 </div>
 

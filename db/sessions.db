@@ -1,2 +1,2 @@
-{"courseId":"S9agRYMKBwP8gtHj","startDateTime":"2026-05-12T11:00","endDateTime":"2026-05-12T12:00","capacity":15,"bookedCount":0,"_id":"cKKZ4oBR3eoKcfkN"}
+{"courseId":"S9agRYMKBwP8gtHj","startDateTime":"2026-05-12T11:00","endDateTime":"2026-05-12T12:00","capacity":15,"bookedCount":1,"_id":"cKKZ4oBR3eoKcfkN","location":"HQ","price":10}
 {"$$indexCreated":{"fieldName":"courseId","unique":false,"sparse":false}}

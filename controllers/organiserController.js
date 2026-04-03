@@ -1,6 +1,7 @@
 // controllers/organiserController.js
 import { createCourse, listCourses, getCourseById, updateCourse, deleteCourse } from "../services/courseService.js";
-import { createSession, getSessionById, updateSession, deleteSession } from "../services/sessionService.js";
+import { createSession, getSessionById, updateSession, deleteSession, listSessionsByCourse, getSessionParticipants } from "../services/sessionService.js";
+import { calcDuration, fmtDate, fmtDateOnly } from "../utils/dateUtils.js";
 
 // Dashboard
 export const organiserDashboard = async (req, res, next) => {
@@ -143,6 +144,49 @@ export const deleteSessionHandler = async (req, res, next) => {
   try {
     await deleteSession(req.params.id);
     res.redirect("/organiser");
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const organiserCourseDetail = async (req, res, next) => {
+  try {
+    const course = await getCourseById(req.params.id);
+    const sessions = await listSessionsByCourse(req.params.id);
+
+  const sessionRows = sessions.map((s) => ({
+    id: s._id,
+    start: new Date(s.startDateTime).toLocaleString("en-GB"),
+    end: new Date(s.endDateTime).toLocaleString("en-GB"),
+    duration: calcDuration(s.startDateTime, s.endDateTime),
+    capacity: s.capacity,
+    booked: s.bookedCount ?? 0,
+    remaining: Math.max(0, (s.capacity ?? 0) - (s.bookedCount ?? 0)),
+    location: s.location ?? "TBA",
+    price: s.price ?? 0,
+  }));
+
+    res.render("organiser/course_sessions", {
+      title: course.title,
+      course,
+      sessions: sessionRows,
+      hasSessions: sessionRows.length > 0,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+export const getParticipantList = async (req, res, next) => {
+  try {
+    const { session, participants, hasParticipants } = 
+      await getSessionParticipants(req.params.id);
+
+    res.render("organiser/participant_list", {
+      title: "Class List",
+      session,
+      participants,
+      hasParticipants,
+    });
   } catch (err) {
     next(err);
   }

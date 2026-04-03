@@ -13,14 +13,12 @@ import { UserModel } from "../models/userModel.js";
 const iso = (d) => new Date(d).toISOString();
 
 async function wipeAll() {
-  // Remove all documents to guarantee a clean seed
   await Promise.all([
     usersDb.remove({}, { multi: true }),
     coursesDb.remove({}, { multi: true }),
     sessionsDb.remove({}, { multi: true }),
     bookingsDb.remove({}, { multi: true }),
   ]);
-  // Compact files so you’re not looking at stale data on disk
   await Promise.all([
     usersDb.persistence.compactDatafile(),
     coursesDb.persistence.compactDatafile(),
@@ -32,21 +30,36 @@ async function wipeAll() {
 async function ensureDemoStudent() {
   let student = await UserModel.findByEmail("fiona@student.local");
   if (!student) {
-    student = await UserModel.create({
-      name: "Fiona",
-      email: "fiona@student.local",
-      role: "student",
-    });
+    student = await UserModel.create(
+      "Fiona",
+      "fiona@student.local",
+      "student",
+      "password123"
+    );
   }
   return student;
 }
 
+async function ensureDemoOrganiser() {
+  let organiser = await UserModel.findByEmail("organiser@yoga.local");
+  if (!organiser) {
+    organiser = await UserModel.create(
+      "Organiser",
+      "organiser@yoga.local",
+      "organiser",
+      "password123"
+    );
+  }
+  return organiser;
+}
+
 async function createWeekendWorkshop() {
-  const instructor = await UserModel.create({
-    name: "Ava",
-    email: "ava@yoga.local",
-    role: "instructor",
-  });
+  const instructor = await UserModel.create(
+    "Ava",
+    "ava@yoga.local",
+    "instructor",
+    "password123"
+  );
   const course = await CourseModel.create({
     title: "Winter Mindfulness Workshop",
     level: "beginner",
@@ -59,10 +72,10 @@ async function createWeekendWorkshop() {
     description: "Two days of breath, posture alignment, and meditation.",
   });
 
-  const base = new Date("2026-01-10T09:00:00"); // Sat 9am
+  const base = new Date("2026-01-10T09:00:00");
   const sessions = [];
   for (let i = 0; i < 5; i++) {
-    const start = new Date(base.getTime() + i * 2 * 60 * 60 * 1000); // every 2 hours
+    const start = new Date(base.getTime() + i * 2 * 60 * 60 * 1000);
     const end = new Date(start.getTime() + 60 * 60 * 1000);
     const s = await SessionModel.create({
       courseId: course._id,
@@ -70,6 +83,8 @@ async function createWeekendWorkshop() {
       endDateTime: iso(end),
       capacity: 20,
       bookedCount: 0,
+      location: "Studio 1, Yoga Centre, Glasgow",
+      price: 15.00,
     });
     sessions.push(s);
   }
@@ -80,11 +95,12 @@ async function createWeekendWorkshop() {
 }
 
 async function createWeeklyBlock() {
-  const instructor = await UserModel.create({
-    name: "Ben",
-    email: "ben@yoga.local",
-    role: "instructor",
-  });
+  const instructor = await UserModel.create(
+    "Ben",
+    "ben@yoga.local",
+    "instructor",
+    "password123"
+  );
   const course = await CourseModel.create({
     title: "12‑Week Vinyasa Flow",
     level: "intermediate",
@@ -97,7 +113,7 @@ async function createWeeklyBlock() {
     description: "Progressive sequences building strength and flexibility.",
   });
 
-  const first = new Date("2026-02-02T18:30:00"); // Monday 6:30pm
+  const first = new Date("2026-02-02T18:30:00");
   const sessions = [];
   for (let i = 0; i < 12; i++) {
     const start = new Date(first.getTime() + i * 7 * 24 * 60 * 60 * 1000);
@@ -108,6 +124,8 @@ async function createWeeklyBlock() {
       endDateTime: iso(end),
       capacity: 18,
       bookedCount: 0,
+      location: "Studio 2, Yoga Centre, Glasgow",
+      price: 12.50,
     });
     sessions.push(s);
   }
@@ -144,6 +162,9 @@ async function run() {
   console.log("Creating demo student…");
   const student = await ensureDemoStudent();
 
+  console.log("Creating demo organiser…");
+  const organiser = await ensureDemoOrganiser();
+
   console.log("Creating weekend workshop…");
   const w = await createWeekendWorkshop();
 
@@ -154,6 +175,7 @@ async function run() {
 
   console.log("\n✅ Seed complete.");
   console.log("Student ID           :", student._id);
+  console.log("Organiser ID         :", organiser._id);
   console.log(
     "Workshop course ID   :",
     w.course._id,

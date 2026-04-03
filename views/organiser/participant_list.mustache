@@ -1,0 +1,45 @@
+{{> head}}
+{{> header}}
+
+<div class="wrap">
+  <h1>{{ title }}</h1>
+
+  <div class="kv" style="margin-bottom:1.5rem;">
+    <dt>Start</dt><dd>{{session.start}}</dd>
+    <dt>End</dt><dd>{{session.end}}</dd>
+    <dt>Location</dt><dd>{{session.location}}</dd>
+  </div>
+
+  {{#hasParticipants}}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Booked At</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#participants}}
+      <tr>
+        <td>{{name}}</td>
+        <td>{{email}}</td>
+        <td>{{status}}</td>
+        <td>{{bookedAt}}</td>
+      </tr>
+      {{/participants}}
+    </tbody>
+  </table>
+  {{/hasParticipants}}
+
+  {{^hasParticipants}}
+  <p class="muted">No participants have booked this session yet.</p>
+  {{/hasParticipants}}
+
+  <div style="margin-top:1.5rem;">
+    <a href="/organiser/courses/{{session.courseId}}" class="btn">← Back to Sessions</a>
+  </div>
+</div>
+
+{{> footer}}

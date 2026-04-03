@@ -2,3 +2,4 @@
 {"name":"Fiona","email":"fiona@student.local","role":"user","_id":"cqhGQKxArmgTO1Se"}
 {"name":"Connor","email":"connor@mail.com","role":"user","password":"$2b$10$b9leY0iDXMMOZBKdmwJZOe/OjibdJHeT3WbYBHBUWF/lMuXKqpyZ6","_id":"gScnGq4Pc4gDyQHr"}
 {"$$indexCreated":{"fieldName":"email","unique":true,"sparse":false}}
+{"$$indexCreated":{"fieldName":"email","unique":true}}
