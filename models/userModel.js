@@ -30,5 +30,18 @@ export const UserModel = {
 
   async verifyPassword(plainText, hashedPassword) {
     return bcrypt.compare(plainText, hashedPassword);
-  }
+  },
+
+  async delete(id) {
+  return usersDb.remove({ _id: id }, {});
+},
+
+async updateRole(id, role) {
+  await usersDb.update({ _id: id }, { $set: { role } });
+  return this.findById(id);
+},
+
+async list() {
+  return usersDb.find({});
+},
 };

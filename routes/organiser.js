@@ -15,6 +15,10 @@ import {
   deleteSessionHandler,
   organiserCourseDetail, 
   getParticipantList,
+  getUserManagementPage,
+  deleteUserHandler,
+  promoteUserHandler,
+  demoteUserHandler,
 } from "../controllers/organiserController.js";
 
 const router = Router();
@@ -40,4 +44,8 @@ router.post("/sessions/:id/edit", postEditSession);
 router.post("/sessions/:id/delete", deleteSessionHandler);
 router.get("/sessions/:id/participants", getParticipantList);
 
+router.get("/users", getUserManagementPage);
+router.post("/users/:id/delete", deleteUserHandler);
+router.post("/users/:id/promote", promoteUserHandler);
+router.post("/users/:id/demote", demoteUserHandler);
 export default router;

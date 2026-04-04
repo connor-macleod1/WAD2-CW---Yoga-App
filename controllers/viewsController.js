@@ -2,6 +2,7 @@
 import {
   getHomePageData,
   getCourseDetailData,
+  getSessionDetail,
 } from "../services/viewsService.js";
 import {
   bookCourseForUser,
@@ -26,6 +27,10 @@ export const homePage = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+export const aboutPage = async (req, res) => {
+  res.render("about", { title: "About Us" });
 };
 
 export const courseDetailPage = async (req, res, next) => {
@@ -121,4 +126,28 @@ export const showRegistrationPage = (req, res) => {
 
 export const showLoginPage = (req, res) => {
   res.render("login", { title: "Sign In" });
+};
+
+
+export const sessionDetailPage = async (req, res, next) => {
+  try {
+    const { session, course, alreadyBooked } = await getSessionDetail(
+      req.params.id,
+      req.user?._id
+    );
+    res.render("session", {
+      title: `Session — ${course.title}`,
+      session,
+      course,
+      alreadyBooked,
+    });
+  } catch (err) {
+    if (err.message === "Session not found") {
+      return res.status(404).render("error", {
+        title: "Not found",
+        message: "Session not found",
+      });
+    }
+    next(err);
+  }
 };

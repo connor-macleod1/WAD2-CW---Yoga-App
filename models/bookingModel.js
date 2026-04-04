@@ -22,5 +22,21 @@ export const BookingModel = {
     status: { $in: ["CONFIRMED", "WAITLISTED"] }
   });
 },
+async findByUserAndSession(userId, sessionId) {
+  return bookingsDb.findOne({
+    userId,
+    sessionIds: sessionId,
+    status: { $in: ["CONFIRMED", "WAITLISTED"] }
+  });
+},
+
+async findByUserAndCourse(userId, courseId) {
+  return bookingsDb.findOne({
+    userId,
+    courseId,
+    type: "COURSE",
+    status: { $in: ["CONFIRMED", "WAITLISTED"] }
+  });
+},
 };
 

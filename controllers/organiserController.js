@@ -1,7 +1,13 @@
 // controllers/organiserController.js
 import { createCourse, listCourses, getCourseById, updateCourse, deleteCourse } from "../services/courseService.js";
 import { createSession, getSessionById, updateSession, deleteSession, listSessionsByCourse, getSessionParticipants } from "../services/sessionService.js";
-import { calcDuration, fmtDate, fmtDateOnly } from "../utils/dateUtils.js";
+import {
+  listUsers,
+  deleteUser,
+  promoteToOrganiser,
+  demoteFromOrganiser,
+} from "../services/userService.js";
+import { calcDuration } from "../utils/dateUtils.js";
 
 // Dashboard
 export const organiserDashboard = async (req, res, next) => {
@@ -189,5 +195,60 @@ export const getParticipantList = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  }
+};
+
+export const getUserManagementPage = async (req, res, next) => {
+  try {
+    const users = await listUsers();
+    const userRows = users.map((u) => ({
+      id: u._id,
+      name: u.name,
+      email: u.email,
+      role: u.role,
+      isOrganiser: u.role === "organiser",
+      isStudent: u.role === "student",
+    }));
+    res.render("organiser/users", {
+      title: "User Management",
+      users: userRows,
+      hasUsers: userRows.length > 0,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+export const promoteUserHandler = async (req, res, next) => {
+  try {
+    await promoteToOrganiser(req.params.id);
+    res.redirect("/organiser/users");
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteUserHandler = async (req, res, next) => {
+  try {
+    await deleteUser(req.params.id, req.user._id);
+    res.redirect("/organiser/users");
+  } catch (err) {
+    res.status(400).render("organiser/users", {
+      title: "User Management",
+      errors: { message: err.message },
+    });
+  }
+};
+
+export const demoteUserHandler = async (req, res, next) => {
+  try {
+    await demoteFromOrganiser(req.params.id, req.user._id);
+    res.redirect("/organiser/users");
+  } catch (err) {
+    res.status(400).render("organiser/users", {
+      title: "User Management",
+      errors: { message: err.message },
+    });
   }
 };

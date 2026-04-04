@@ -39,3 +39,32 @@ export async function loginUser(email, password) {
 
   return user;
 }
+
+export async function listUsers() {
+  return UserModel.list();
+}
+
+export async function deleteUser(id, requestingUserId) {
+  if (!id) throw new Error("User ID is required.");
+  if (id === requestingUserId) throw new Error("You cannot delete your own account.");
+  const user = await UserModel.findById(id);
+  if (!user) throw new Error("User not found.");
+  return UserModel.delete(id);
+}
+
+export async function promoteToOrganiser(id) {
+  if (!id) throw new Error("User ID is required.");
+  const user = await UserModel.findById(id);
+  if (!user) throw new Error("User not found.");
+  if (user.role === "organiser") throw new Error("User is already an organiser.");
+  return UserModel.updateRole(id, "organiser");
+}
+
+export async function demoteFromOrganiser(id, requestingUserId) {
+  if (!id) throw new Error("User ID is required.");
+  if (id === requestingUserId) throw new Error("You cannot remove your own organiser role.");
+  const user = await UserModel.findById(id);
+  if (!user) throw new Error("User not found.");
+  if (user.role !== "organiser") throw new Error("User is not an organiser.");
+  return UserModel.updateRole(id, "student");
+}

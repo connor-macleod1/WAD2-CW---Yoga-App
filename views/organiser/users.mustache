@@ -1,0 +1,60 @@
+{{> head}}
+{{> header}}
+
+<div class="wrap">
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <h1>{{ title }}</h1>
+    <a href="/organiser" class="btn">← Back to Dashboard</a>
+  </div>
+
+  {{#errors}}
+  <div class="alert error" role="alert">
+    <p>{{message}}</p>
+  </div>
+  {{/errors}}
+
+  {{#hasUsers}}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#users}}
+      <tr>
+        <td>{{name}}</td>
+        <td>{{email}}</td>
+        <td>{{role}}</td>
+        <td>
+          {{#isStudent}}
+          <form method="post" action="/organiser/users/{{id}}/promote" style="display:inline">
+            <button class="btn" type="submit">Make Organiser</button>
+          </form>
+          {{/isStudent}}
+
+          {{#isOrganiser}}
+          <form method="post" action="/organiser/users/{{id}}/demote" style="display:inline">
+            <button class="btn" type="submit">Remove Organiser</button>
+          </form>
+          {{/isOrganiser}}
+
+          <form method="post" action="/organiser/users/{{id}}/delete" style="display:inline">
+            <button class="btn" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {{/users}}
+    </tbody>
+  </table>
+  {{/hasUsers}}
+
+  {{^hasUsers}}
+  <p class="muted">No users found.</p>
+  {{/hasUsers}}
+</div>
+
+{{> footer}}

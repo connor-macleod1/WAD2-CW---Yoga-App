@@ -1,0 +1,40 @@
+{{> head}}
+{{> header}}
+
+<div class="wrap">
+  <a href="/courses/{{course.id}}" class="btn">← Back to {{course.title}}</a>
+
+  <h1>Session Details</h1>
+
+  <div class="kv" style="margin-bottom:1.5rem;">
+    <dt>Start</dt><dd>{{session.start}}</dd>
+    <dt>End</dt><dd>{{session.end}}</dd>
+    <dt>Duration</dt><dd>{{session.duration}}</dd>
+    <dt>Location</dt><dd>{{session.location}}</dd>
+    <dt>Price</dt><dd>£{{session.price}}</dd>
+    <dt>Capacity</dt><dd>{{session.capacity}}</dd>
+    <dt>Remaining Places</dt><dd>{{session.remaining}}</dd>
+  </div>
+
+  {{#alreadyBooked}}
+  <p class="muted">You have already booked this session.</p>
+  {{/alreadyBooked}}
+
+  {{^alreadyBooked}}
+    {{#session.allowDropIn}}
+      {{#user}}
+      <form method="post" action="/sessions/{{session.id}}/book">
+        <button class="btn primary" type="submit">Book Attendance</button>
+      </form>
+      {{/user}}
+      {{^user}}
+      <p class="muted"><a href="/login">Sign in</a> to book this session.</p>
+      {{/user}}
+    {{/session.allowDropIn}}
+    {{^session.allowDropIn}}
+    <p class="muted">Drop-in bookings are not available for this session.</p>
+    {{/session.allowDropIn}}
+  {{/alreadyBooked}}
+</div>
+
+{{> footer}}

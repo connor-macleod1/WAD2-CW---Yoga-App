@@ -2,7 +2,7 @@
 import { CourseModel } from "../models/courseModel.js";
 import { SessionModel } from "../models/sessionModel.js";
 import { calcDuration, fmtDate, fmtDateOnly } from "../utils/dateUtils.js";
-
+import { BookingModel } from "../models/bookingModel.js";
 
 
 export async function getHomePageData() {
@@ -57,5 +57,41 @@ export async function getCourseDetailData(courseId) {
       description: course.description,
     },
     sessions: rows,
+  };
+}
+
+export async function getSessionDetail(sessionId, userId) {
+  const session = await SessionModel.findById(sessionId);
+  if (!session) throw new Error("Session not found");
+
+  const course = await CourseModel.findById(session.courseId);
+  if (!course) throw new Error("Course not found");
+
+  // Check if user has already booked
+  let alreadyBooked = false;
+  if (userId) {
+    const existing = await BookingModel.findByUserAndSession(userId, sessionId);
+    alreadyBooked = !!existing;
+  }
+
+  return {
+    session: {
+      id: session._id,
+      start: fmtDate(session.startDateTime),
+      end: fmtDate(session.endDateTime),
+      duration: calcDuration(session.startDateTime, session.endDateTime),
+      location: session.location ?? "TBA",
+      price: session.price ?? 0,
+      capacity: session.capacity,
+      booked: session.bookedCount ?? 0,
+      remaining: Math.max(0, (session.capacity ?? 0) - (session.bookedCount ?? 0)),
+      allowDropIn: course.allowDropIn,
+    },
+    course: {
+      id: course._id,
+      title: course.title,
+      allowDropIn: course.allowDropIn,
+    },
+    alreadyBooked,
   };
 }

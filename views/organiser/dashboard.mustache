@@ -2,7 +2,10 @@
 {{> header}}
 
 <div class="wrap">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
   <h1>{{ title }}</h1>
+  <a href="/organiser/users" class="btn">Manage Users</a>
+</div>
 
   {{#errors}}
   <div class="alert error" role="alert">
