@@ -30,6 +30,18 @@ function buildLink(basePath, query, page, pageSize) {
   return `${basePath}?${params.toString()}`;
 }
 
+const calcDuration = (start, end) => {
+  const s = new Date(start);
+  const e = new Date(end);
+  const diffMs = e - s;
+  const diffMins = Math.round(diffMs / 60000);
+  const hours = Math.floor(diffMins / 60);
+  const mins = diffMins % 60;
+  if (hours === 0) return `${mins}min`;
+  if (mins === 0) return `${hours}hr`;
+  return `${hours}hr ${mins}min`;
+};
+
 export async function searchCourses(filters, basePath) {
   const { level, type, dropin, q, page = "1", pageSize = "10" } = filters;
 
@@ -135,12 +147,11 @@ export async function createCourse(body) {
   };
 
   try {
-  return await CourseModel.create(courseData);
-} catch (err) {
-  throw new Error(`Failed to create course: ${err.message}`);
+    return await CourseModel.create(courseData);
+  } catch (err) {
+    throw new Error(`Failed to create course: ${err.message}`);
+  }
 }
-}
-
 
 export async function deleteCourse(id) {
   if (!id) throw new Error("Course ID is required.");
@@ -160,6 +171,38 @@ export async function getCourseById(id) {
   return course;
 }
 
+export async function getCourseDetailData(courseId) {
+  const course = await CourseModel.findById(courseId);
+  if (!course) throw new Error("Course not found");
+
+  const sessions = await SessionModel.listByCourse(courseId);
+  const rows = sessions.map((s) => ({
+    id: s._id,
+    start: fmtDateTime(s.startDateTime),
+    end: fmtDateTime(s.endDateTime),
+    duration: calcDuration(s.startDateTime, s.endDateTime),
+    capacity: s.capacity,
+    booked: s.bookedCount ?? 0,
+    remaining: Math.max(0, (s.capacity ?? 0) - (s.bookedCount ?? 0)),
+    location: s.location ?? "TBA",
+    price: s.price ?? 0,
+  }));
+
+  return {
+    course: {
+      id: course._id,
+      title: course.title,
+      level: course.level,
+      type: course.type,
+      allowDropIn: course.allowDropIn,
+      startDate: course.startDate ? fmtDateOnly(course.startDate) : "",
+      endDate: course.endDate ? fmtDateOnly(course.endDate) : "",
+      description: course.description,
+    },
+    sessions: rows,
+  };
+}
+
 export async function listCourses() {
   return CourseModel.list();
 }
@@ -170,12 +213,10 @@ export async function updateCourse(id, body) {
   const course = await CourseModel.findById(id);
   if (!course) throw new Error("Course not found.");
 
-  // Optionally, validate fields here if needed
   const updatedData = {
     name: body.name ?? course.name,
     description: body.description ?? course.description,
     duration: body.duration ?? course.duration,
-    // add other course fields as necessary
   };
 
   return CourseModel.update(id, updatedData);

@@ -15,7 +15,6 @@ describe("SSR view routes", () => {
     const res = await request(app).get("/");
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toMatch(/html/);
-    // Page title from home.mustache (adjust if you changed it)
     expect(res.text).toMatch(/Courses|Upcoming Courses/i);
   });
 
@@ -33,18 +32,18 @@ describe("SSR view routes", () => {
     expect(res.text).toMatch(/Test Course/);
   });
 
-test("GET /courses/:id renders course detail with booking form", async () => {
-  const res = await request(app).get(`/courses/${data.course._id}`);
-  expect(res.status).toBe(200);
-  expect(res.headers["content-type"]).toMatch(/html/);
-  expect(res.text).toMatch(/Book the full course|Enrol/i);
-});
+  test("GET /courses/:id renders course detail with login prompt (unauthenticated)", async () => {
+    const res = await request(app).get(`/courses/${data.course._id}`);
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toMatch(/html/);
+    expect(res.text).toMatch(/Sign in.*to book/i);
+  });
 
-test("GET /sessions/:id renders session detail with booking option", async () => {
-  const sessionId = data.sessions[0]._id;
-  const res = await request(app).get(`/sessions/${sessionId}`);
-  expect(res.status).toBe(200);
-  expect(res.headers["content-type"]).toMatch(/html/);
-  expect(res.text).toMatch(/Book Attendance|Session Details/i);
-});
+  test("GET /sessions/:id renders session detail", async () => {
+    const sessionId = data.sessions[0]._id;
+    const res = await request(app).get(`/sessions/${sessionId}`);
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toMatch(/html/);
+    expect(res.text).toMatch(/Session Details/i);
+  });
 });
