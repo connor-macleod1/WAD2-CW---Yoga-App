@@ -5,16 +5,23 @@ import { UserModel } from "../models/userModel.js";
 
 describe("JSON API routes", () => {
   let data;
-  let student;
+  let courseBookingStudent;
+  let sessionBookingStudent;
 
   beforeAll(async () => {
     process.env.NODE_ENV = "test";
     await resetDb();
     data = await seedMinimal();
-    // Create a student for bookings
-    student = await UserModel.create(
-      "API Student",
-      "api@student.local",
+    // Create separate students for different booking tests
+    courseBookingStudent = await UserModel.create(
+      "Course Booking Student",
+      "course@student.local",
+      "student",
+      "password123"
+    );
+    sessionBookingStudent = await UserModel.create(
+      "Session Booking Student",
+      "session@student.local",
       "student",
       "password123"
     );
@@ -83,7 +90,7 @@ describe("JSON API routes", () => {
   // BOOKINGS
   test("POST /api/bookings/course creates a course booking (CONFIRMED or WAITLISTED)", async () => {
     const res = await request(app).post("/api/bookings/course").send({
-      userId: student._id,
+      userId: courseBookingStudent._id,
       courseId: data.course._id,
     });
     expect(res.status).toBe(201);
@@ -94,7 +101,7 @@ describe("JSON API routes", () => {
 
   test("POST /api/bookings/session creates a session booking (CONFIRMED or WAITLISTED)", async () => {
     const res = await request(app).post("/api/bookings/session").send({
-      userId: student._id,
+      userId: sessionBookingStudent._id,
       sessionId: data.sessions[0]._id,
     });
     expect(res.status).toBe(201);
@@ -104,9 +111,9 @@ describe("JSON API routes", () => {
   });
 
   test("DELETE /api/bookings/:id cancels a booking", async () => {
-    // Create, then cancel
+    // Create booking and cancel
     const create = await request(app).post("/api/bookings/session").send({
-      userId: student._id,
+      userId: sessionBookingStudent._id,
       sessionId: data.sessions[1]._id,
     });
     expect(create.status).toBe(201);

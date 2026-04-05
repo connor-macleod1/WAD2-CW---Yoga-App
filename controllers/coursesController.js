@@ -2,9 +2,8 @@
 import {
   createCourse,
   searchCourses,
-  getCourseById,
+  getCourseDetailData,
   listCourses,
-  getCourseDetailData
 } from "../services/courseService.js";
 
 export const listCoursesHandler = async (req, res, next) => {
@@ -27,13 +26,11 @@ export const createCourseHandler = async (req, res, next) => {
 
 export const getCourseSessions = async (req, res, next) => {
   try {
-    const course = await getCourseById(req.params.id);
-    // Get sessions through the service layer
-    const { sessions } = await getCourseDetailData(req.params.id);
+    const { course, sessions } = await getCourseDetailData(req.params.id);
     res.json({ course, sessions });
   } catch (err) {
-    if (err.message === "Course not found") {
-      return res.status(404).json({ error: "Course not found" });
+    if (err.message.includes("not found")) {
+      return res.status(404).json({ error: err.message });
     }
     next(err);
   }
