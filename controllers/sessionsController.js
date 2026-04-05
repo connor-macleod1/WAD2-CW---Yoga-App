@@ -1,6 +1,8 @@
 // controllers/sessionsController.js
-import { SessionModel } from "../models/sessionModel.js";
-import { createSession } from "../services/sessionService.js";
+import {
+  createSession,
+  listSessionsByCourse,
+} from "../services/sessionService.js";
 
 export const createSessionHandler = async (req, res, next) => {
   try {
@@ -13,7 +15,7 @@ export const createSessionHandler = async (req, res, next) => {
 
 export const listCourseSessions = async (req, res, next) => {
   try {
-    const sessions = await SessionModel.listByCourse(req.params.courseId);
+    const sessions = await listSessionsByCourse(req.params.courseId);
     res.json({ sessions });
   } catch (err) {
     next(err);

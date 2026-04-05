@@ -1,10 +1,18 @@
 // controllers/coursesController.js
-import { CourseModel } from "../models/courseModel.js";
-import { createCourse, searchCourses } from "../services/courseService.js";
+import {
+  createCourse,
+  searchCourses,
+  getCourseById,
+  listCourses,
+} from "../services/courseService.js";
 
-export const listCourses = async (req, res) => {
-  const courses = await CourseModel.list();
-  res.json({ courses });
+export const listCoursesHandler = async (req, res, next) => {
+  try {
+    const courses = await listCourses();
+    res.json({ courses });
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const createCourseHandler = async (req, res, next) => {
@@ -16,11 +24,18 @@ export const createCourseHandler = async (req, res, next) => {
   }
 };
 
-export const getCourseSessions = async (req, res) => {
-  const course = await CourseModel.findById(req.params.id);
-  if (!course) return res.status(404).json({ error: "Course not found" });
-  const sessions = await SessionModel.listByCourse(course._id);
-  res.json({ course, sessions });
+export const getCourseSessions = async (req, res, next) => {
+  try {
+    const course = await getCourseById(req.params.id);
+    // Get sessions through the service layer
+    const { sessions } = await getCourseDetailData(req.params.id);
+    res.json({ course, sessions });
+  } catch (err) {
+    if (err.message === "Course not found") {
+      return res.status(404).json({ error: "Course not found" });
+    }
+    next(err);
+  }
 };
 
 export const coursesListPage = async (req, res, next) => {

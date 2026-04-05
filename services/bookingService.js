@@ -10,7 +10,6 @@ export async function bookCourseForUser(userId, courseId) {
   const course = await CourseModel.findById(courseId);
   if (!course) throw new Error("Course not found");
 
-  // Prevent double enrolment
   const existing = await BookingModel.findByUserAndCourse(userId, courseId);
   if (existing) throw new Error("You are already enrolled on this course.");
 
@@ -46,7 +45,6 @@ export async function bookSessionForUser(userId, sessionId) {
     throw err;
   }
 
-  // Prevent double booking
   const existing = await BookingModel.findByUserAndSession(userId, sessionId);
   if (existing) throw new Error("You have already booked this session.");
 
@@ -64,4 +62,18 @@ export async function bookSessionForUser(userId, sessionId) {
     sessionIds: [session._id],
     status,
   });
+}
+
+export async function cancelBookingForUser(bookingId) {
+  const booking = await BookingModel.findById(bookingId);
+  if (!booking) throw new Error("Booking not found");
+  if (booking.status === "CANCELLED") return booking;
+
+  if (booking.status === "CONFIRMED") {
+    for (const sessionId of booking.sessionIds) {
+      await SessionModel.incrementBookedCount(sessionId, -1);
+    }
+  }
+
+  return BookingModel.cancel(bookingId);
 }

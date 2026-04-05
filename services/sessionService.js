@@ -5,7 +5,7 @@ import { BookingModel } from "../models/bookingModel.js";
 import { UserModel } from "../models/userModel.js";
 
 export async function createSession(body) {
-  const { courseId, startDateTime, endDateTime, capacity } = body;
+  const { courseId, startDateTime, endDateTime, capacity, location, price } = body;
 
   // Validate required fields
   if (!courseId || typeof courseId !== "string" || courseId.trim() === "") {
@@ -76,21 +76,19 @@ export async function updateSession(id, body) {
   const session = await SessionModel.findById(id);
   if (!session) throw new Error("Session not found.");
 
-  // Optional: validate or sanitize fields from body
   const updatedData = {
     startDateTime: body.startDateTime ?? session.startDateTime,
     endDateTime: body.endDateTime ?? session.endDateTime,
     capacity: body.capacity != null ? Number(body.capacity) : session.capacity,
     location: body.location?.trim() ?? session.location,
     price: body.price != null ? Number(body.price) : session.price,
-    // add other session fields if necessary
   };
 
-  // Validate that start < end
   if (new Date(updatedData.startDateTime) >= new Date(updatedData.endDateTime)) {
     throw new Error("Start date and time must be before end date and time.");
   }
-    return SessionModel.update(id, updatedData);
+
+  return SessionModel.update(id, updatedData);
 }
 
 export async function listSessionsByCourse(courseId) {
