@@ -1,3 +1,4 @@
 {"name":"Test Student","email":"student@test.local","role":"student","password":"$2b$10$qLIjCaBKZcJzaLjoqkIeA.yKLUHGLE7.6i8ze/AKTFEipF86mmLka","_id":"ceNvFzyFgM8npeEt"}
 {"name":"Javier","email":"javi@mail.net","role":"organiser","password":"$2b$10$niMCiHX0BNBIlxI1GkHBT.GlzRuzj2uDagFrDqmwd80Wr.wPoe7W2","_id":"rGAaF14Etmwc3qkI"}
 {"$$indexCreated":{"fieldName":"email","unique":true,"sparse":false}}
+{"$$indexCreated":{"fieldName":"email","unique":true}}
