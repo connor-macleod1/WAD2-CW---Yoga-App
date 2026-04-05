@@ -4,6 +4,7 @@ import {
   searchCourses,
   getCourseById,
   listCourses,
+  getCourseDetailData
 } from "../services/courseService.js";
 
 export const listCoursesHandler = async (req, res, next) => {
