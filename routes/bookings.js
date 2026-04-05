@@ -7,6 +7,6 @@ const router = Router();
 
 router.post('/course', bookCourse);
 router.post('/session', bookSession);
-router.delete('/:bookingId', cancelBooking);
+router.delete('/:Id', cancelBooking);
 
 export default router;

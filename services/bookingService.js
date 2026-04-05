@@ -20,7 +20,14 @@ export async function bookCourseForUser(userId, courseId) {
   if (!canReserveAll(sessions)) {
     status = "WAITLISTED";
   } else {
-    for (const s of sessions) await SessionModel.incrementBookedCount(s._id, 1);
+    for (const s of sessions) {
+      try {
+        await SessionModel.incrementBookedCount(s._id, 1);
+      } catch (err) {
+        console.error(`Failed to increment session ${s._id}:`, err);
+        throw err;
+      }
+    }
   }
 
   return BookingModel.create({
@@ -52,7 +59,12 @@ export async function bookSessionForUser(userId, sessionId) {
   if ((session.bookedCount ?? 0) >= (session.capacity ?? 0)) {
     status = "WAITLISTED";
   } else {
-    await SessionModel.incrementBookedCount(session._id, 1);
+    try {
+      await SessionModel.incrementBookedCount(session._id, 1);
+    } catch (err) {
+      console.error(`Failed to increment session ${session._id}:`, err);
+      throw err;
+    }
   }
 
   return BookingModel.create({
@@ -69,9 +81,15 @@ export async function cancelBookingForUser(bookingId) {
   if (!booking) throw new Error("Booking not found");
   if (booking.status === "CANCELLED") return booking;
 
+  // Only decrement if it was CONFIRMED (only confirmed bookings increment count)
   if (booking.status === "CONFIRMED") {
     for (const sessionId of booking.sessionIds) {
-      await SessionModel.incrementBookedCount(sessionId, -1);
+      try {
+        await SessionModel.incrementBookedCount(sessionId, -1);
+      } catch (err) {
+        console.error(`Failed to decrement session ${sessionId}:`, err);
+        throw err;
+      }
     }
   }
 

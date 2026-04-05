@@ -45,13 +45,13 @@ export const bookSession = async (req, res, next) => {
 
 export const cancelBooking = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { Id } = req.params;
 
-    if (!id) {
+    if (!Id) {
       return res.status(400).json({ error: "Booking ID is required." });
     }
 
-    const booking = await cancelBookingForUser(id);
+    const booking = await cancelBookingForUser(Id);
     res.status(200).json({ booking });
   } catch (err) {
     res.status(500).json({ error: err.message });
