@@ -66,5 +66,5 @@ export async function demoteFromOrganiser(id, requestingUserId) {
   const user = await UserModel.findById(id);
   if (!user) throw new Error("User not found.");
   if (user.role !== "organiser") throw new Error("User is not an organiser.");
-  return UserModel.updateRole(id, "student");
+  return UserModel.updateRole(id, "user");
 }

@@ -30,11 +30,11 @@
         <td>{{email}}</td>
         <td>{{role}}</td>
         <td>
-          {{#isStudent}}
+          {{#isUser}}
           <form method="post" action="/organiser/users/{{id}}/promote" style="display:inline">
             <button class="btn" type="submit">Make Organiser</button>
           </form>
-          {{/isStudent}}
+          {{/isUser}}
 
           {{#isOrganiser}}
           <form method="post" action="/organiser/users/{{id}}/demote" style="display:inline">

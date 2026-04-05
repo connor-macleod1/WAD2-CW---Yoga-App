@@ -226,7 +226,7 @@ export const getUserManagementPage = async (req, res, next) => {
       email: u.email,
       role: u.role,
       isOrganiser: u.role === "organiser",
-      isStudent: u.role === "student",
+      isUser: u.role === "user",
     }));
     res.render("organiser/users", {
       title: "User Management",

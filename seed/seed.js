@@ -27,17 +27,17 @@ async function wipeAll() {
   ]);
 }
 
-async function ensureDemoStudent() {
-  let student = await UserModel.findByEmail("fiona@student.local");
-  if (!student) {
-    student = await UserModel.create(
+async function ensureDemouser() {
+  let user = await UserModel.findByEmail("fiona@user.local");
+  if (!user) {
+    user = await UserModel.create(
       "Fiona",
-      "fiona@student.local",
-      "student",
+      "fiona@user.local",
+      "user",
       "password123"
     );
   }
-  return student;
+  return user;
 }
 
 async function ensureDemoOrganiser() {
@@ -54,10 +54,10 @@ async function ensureDemoOrganiser() {
 }
 
 async function createWeekendWorkshop() {
-  const instructor = await UserModel.create(
+  const organiser = await UserModel.create(
     "Ava",
     "ava@yoga.local",
-    "instructor",
+    "organiser",
     "password123"
   );
   const course = await CourseModel.create({
@@ -67,7 +67,7 @@ async function createWeekendWorkshop() {
     allowDropIn: false,
     startDate: "2026-01-10",
     endDate: "2026-01-11",
-    instructorId: instructor._id,
+    organiserId: organiser._id,
     sessionIds: [],
     description: "Two days of breath, posture alignment, and meditation.",
   });
@@ -91,14 +91,14 @@ async function createWeekendWorkshop() {
   await CourseModel.update(course._id, {
     sessionIds: sessions.map((s) => s._id),
   });
-  return { course, sessions, instructor };
+  return { course, sessions, organiser };
 }
 
 async function createWeeklyBlock() {
-  const instructor = await UserModel.create(
+  const organiser = await UserModel.create(
     "Ben",
     "ben@yoga.local",
-    "instructor",
+    "organiser",
     "password123"
   );
   const course = await CourseModel.create({
@@ -108,7 +108,7 @@ async function createWeeklyBlock() {
     allowDropIn: true,
     startDate: "2026-02-02",
     endDate: "2026-04-20",
-    instructorId: instructor._id,
+    organiserId: organiser._id,
     sessionIds: [],
     description: "Progressive sequences building strength and flexibility.",
   });
@@ -132,7 +132,7 @@ async function createWeeklyBlock() {
   await CourseModel.update(course._id, {
     sessionIds: sessions.map((s) => s._id),
   });
-  return { course, sessions, instructor };
+  return { course, sessions, organiser };
 }
 
 async function verifyAndReport() {
@@ -159,8 +159,8 @@ async function run() {
   console.log("Wiping existing data…");
   await wipeAll();
 
-  console.log("Creating demo student…");
-  const student = await ensureDemoStudent();
+  console.log("Creating demo user…");
+  const user = await ensureDemouser();
 
   console.log("Creating demo organiser…");
   const organiser = await ensureDemoOrganiser();
@@ -174,7 +174,7 @@ async function run() {
   await verifyAndReport();
 
   console.log("\n✅ Seed complete.");
-  console.log("Student ID           :", student._id);
+  console.log("user ID           :", user._id);
   console.log("Organiser ID         :", organiser._id);
   console.log(
     "Workshop course ID   :",
