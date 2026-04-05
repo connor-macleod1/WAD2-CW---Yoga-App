@@ -47,12 +47,12 @@ export const cancelBooking = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    if (!id || typeof id !== "string" || id.trim() === "") {
+    if (!id) {
       return res.status(400).json({ error: "Booking ID is required." });
     }
 
     const booking = await cancelBookingForUser(id);
-    res.json({ booking });
+    res.status(200).json({ booking });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

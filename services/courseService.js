@@ -190,7 +190,7 @@ export async function getCourseDetailData(courseId) {
 
   return {
     course: {
-      id: course._id,
+      _id: course._id,
       title: course.title,
       level: course.level,
       type: course.type,
