@@ -40,6 +40,7 @@ export const courseDetailPage = async (req, res, next) => {
       title: course.title,
       course,
       sessions,
+      user: res.locals.user,
     });
   } catch (err) {
     if (err.message === "Course not found") {
@@ -128,7 +129,6 @@ export const showLoginPage = (req, res) => {
   res.render("login", { title: "Sign In" });
 };
 
-
 export const sessionDetailPage = async (req, res, next) => {
   try {
     const { session, course, alreadyBooked } = await getSessionDetail(
@@ -140,6 +140,7 @@ export const sessionDetailPage = async (req, res, next) => {
       session,
       course,
       alreadyBooked,
+      user: res.locals.user,
     });
   } catch (err) {
     if (err.message === "Session not found") {

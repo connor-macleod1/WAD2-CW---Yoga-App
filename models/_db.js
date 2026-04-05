@@ -13,25 +13,34 @@ const dbDir = path.join(__dirname, "../db");
 const inMemory = process.env.NODE_ENV === "test";
 
 export const usersDb = Datastore.create({
-  filename: path.join(dbDir, "users.db"),
+  filename: inMemory ? undefined : path.join(dbDir, "users.db"),
   autoload: true,
+  inMemoryOnly: inMemory,
 });
+
 export const coursesDb = Datastore.create({
-  filename: path.join(dbDir, "courses.db"),
+  filename: inMemory ? undefined : path.join(dbDir, "courses.db"),
   autoload: true,
+  inMemoryOnly: inMemory,
 });
+
 export const sessionsDb = Datastore.create({
-  filename: path.join(dbDir, "sessions.db"),
+  filename: inMemory ? undefined : path.join(dbDir, "sessions.db"),
   autoload: true,
+  inMemoryOnly: inMemory,
 });
+
 export const bookingsDb = Datastore.create({
-  filename: path.join(dbDir, "bookings.db"),
+  filename: inMemory ? undefined : path.join(dbDir, "bookings.db"),
   autoload: true,
+  inMemoryOnly: inMemory,
 });
 
 // Call this once at startup (server + seed)
 export async function initDb() {
-  await fs.mkdir(dbDir, { recursive: true });
+  if (!inMemory) {
+    await fs.mkdir(dbDir, { recursive: true });
+  }
   // Ensure helpful indexes are ready before we insert
   await usersDb.ensureIndex({ fieldName: "email", unique: true });
   await sessionsDb.ensureIndex({ fieldName: "courseId" });

@@ -12,12 +12,12 @@ describe("JSON API routes", () => {
     await resetDb();
     data = await seedMinimal();
     // Create a student for bookings
-    student = await UserModel.create({
-      name: "API Student",
-      email: "api@student.local",
-      role: "student",
-      password: "password123"
-    });
+    student = await UserModel.create(
+      "API Student",
+      "api@student.local",
+      "student",
+      "password123"
+    );
   });
 
   // COURSES
@@ -55,21 +55,21 @@ describe("JSON API routes", () => {
   });
 
   // SESSIONS
-test("POST /api/sessions creates a session", async () => {
-  const payload = {
-    courseId: data.course._id,
-    startDateTime: new Date("2026-02-16T18:30:00").toISOString(),
-    endDateTime: new Date("2026-02-16T19:45:00").toISOString(),
-    capacity: 16,
-    bookedCount: 0,
-    location: "Studio 1",
-    price: 10.00,
-  };
-  const res = await request(app).post("/api/sessions").send(payload);
-  expect(res.status).toBe(201);
-  expect(res.body.session).toBeDefined();
-  expect(res.body.session.courseId).toBe(data.course._id);
-});
+  test("POST /api/sessions creates a session", async () => {
+    const payload = {
+      courseId: data.course._id,
+      startDateTime: new Date("2026-02-16T18:30:00").toISOString(),
+      endDateTime: new Date("2026-02-16T19:45:00").toISOString(),
+      capacity: 16,
+      bookedCount: 0,
+      location: "Studio 1",
+      price: 10.00,
+    };
+    const res = await request(app).post("/api/sessions").send(payload);
+    expect(res.status).toBe(201);
+    expect(res.body.session).toBeDefined();
+    expect(res.body.session.courseId).toBe(data.course._id);
+  });
 
   test("GET /api/sessions/by-course/:courseId returns sessions array", async () => {
     const res = await request(app).get(
