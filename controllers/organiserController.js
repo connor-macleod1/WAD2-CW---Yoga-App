@@ -33,9 +33,27 @@ export const getNewCoursePage = (req, res) => {
 
 export const postNewCourse = async (req, res, next) => {
   try {
-    await createCourse(req.body);
+    console.log("=== POST NEW COURSE ===");
+    console.log("req.user:", req.user);
+    console.log("req.body:", req.body);
+    
+    if (!req.user) {
+      console.error("ERROR: req.user is null!");
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    const courseData = {
+      ...req.body,
+      instructorId: req.user._id,
+    };
+    
+    console.log("Creating course with data:", courseData);
+    const result = await createCourse(courseData);
+    console.log("✓ Course created successfully:", result);
     res.redirect("/organiser");
   } catch (err) {
+    console.error("✗ ERROR in postNewCourse:", err.message);
+    console.error("Stack:", err.stack);
     res.status(400).render("organiser/course_form", {
       title: "Add New Course",
       action: "/organiser/courses/new",
@@ -160,17 +178,17 @@ export const organiserCourseDetail = async (req, res, next) => {
     const course = await getCourseById(req.params.id);
     const sessions = await listSessionsByCourse(req.params.id);
 
-  const sessionRows = sessions.map((s) => ({
-    id: s._id,
-    start: new Date(s.startDateTime).toLocaleString("en-GB"),
-    end: new Date(s.endDateTime).toLocaleString("en-GB"),
-    duration: calcDuration(s.startDateTime, s.endDateTime),
-    capacity: s.capacity,
-    booked: s.bookedCount ?? 0,
-    remaining: Math.max(0, (s.capacity ?? 0) - (s.bookedCount ?? 0)),
-    location: s.location ?? "TBA",
-    price: s.price ?? 0,
-  }));
+    const sessionRows = sessions.map((s) => ({
+      id: s._id,
+      start: new Date(s.startDateTime).toLocaleString("en-GB"),
+      end: new Date(s.endDateTime).toLocaleString("en-GB"),
+      duration: calcDuration(s.startDateTime, s.endDateTime),
+      capacity: s.capacity,
+      booked: s.bookedCount ?? 0,
+      remaining: Math.max(0, (s.capacity ?? 0) - (s.bookedCount ?? 0)),
+      location: s.location ?? "TBA",
+      price: s.price ?? 0,
+    }));
 
     res.render("organiser/course_sessions", {
       title: course.title,
@@ -182,6 +200,7 @@ export const organiserCourseDetail = async (req, res, next) => {
     next(err);
   }
 };
+
 export const getParticipantList = async (req, res, next) => {
   try {
     const { session, participants, hasParticipants } = 
@@ -218,7 +237,6 @@ export const getUserManagementPage = async (req, res, next) => {
     next(err);
   }
 };
-
 
 export const promoteUserHandler = async (req, res, next) => {
   try {
