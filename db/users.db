@@ -1,6 +1,5 @@
-{"name":"javier","email":"javi@mail.net","role":"organiser","password":"$2b$10$KzP0eS3V5mMHEUjcSaqBAuLCH/DPvOyGBhsvT3OLq8XBMXSiUAccW","_id":"KSR3TjbedSaaRjqQ"}
-{"name":"John","email":"john@mail.net","role":"user","password":"$2b$10$rZNTqLieTnOQXIS9IPG7yOzzUkk8GTddr.Vxfd8Hm8S7DeHi4.CRC","_id":"S2VyPCtNNIVY6jyI"}
-{"name":"Fiona","email":"fiona@student.local","role":"user","_id":"cqhGQKxArmgTO1Se"}
-{"name":"Connor","email":"connor@mail.com","role":"user","password":"$2b$10$b9leY0iDXMMOZBKdmwJZOe/OjibdJHeT3WbYBHBUWF/lMuXKqpyZ6","_id":"gScnGq4Pc4gDyQHr"}
 {"$$indexCreated":{"fieldName":"email","unique":true,"sparse":false}}
-{"$$deleted":true,"_id":"cqhGQKxArmgTO1Se"}
+{"name":"Test Student","email":"student@test.local","role":"student","password":"$2b$10$qLIjCaBKZcJzaLjoqkIeA.yKLUHGLE7.6i8ze/AKTFEipF86mmLka","_id":"ceNvFzyFgM8npeEt"}
+{"name":"Test Student","email":"student@test.local","role":"student","password":"$2b$10$tNWoNxp3wIXgOgbBjImIluRSNN/.0QW5Jgn9LSR2aVcnzUqZ0xtq.","_id":"8irOc5LtEw9miiJD"}
+{"name":"Test Instructor","email":"instructor@test.local","role":"instructor","password":"$2b$10$85cXcnnvSDI1Sbh9KRDwUev0Gfy/QFUhKwe1zAppEMbMLcElQPmeG","_id":"vBeQVZLM3BL6SyDz"}
+{"name":"Test Instructor","email":"instructor@test.local","role":"instructor","password":"$2b$10$GkABUK8WFh3/dBuvB5E0X.AHL5B30uK.FwqWV59r2E/k3NcQ2Z3ES","_id":"Ko5zqrvmIkNh9oQr"}

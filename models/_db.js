@@ -10,6 +10,8 @@ const __dirname = path.dirname(__filename);
 // Always resolve relative to this file so seeding and server hit the SAME files
 const dbDir = path.join(__dirname, "../db");
 
+const inMemory = process.env.NODE_ENV === "test";
+
 export const usersDb = Datastore.create({
   filename: path.join(dbDir, "users.db"),
   autoload: true,

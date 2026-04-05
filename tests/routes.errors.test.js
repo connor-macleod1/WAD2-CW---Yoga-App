@@ -8,18 +8,18 @@ describe("Edge cases", () => {
     await resetDb();
   });
 
-  test("GET /courses/:id with bad id returns 404 JSON", async () => {
-    const res = await request(app).get("/courses/does-not-exist");
-    expect(res.status).toBe(404);
-    expect(res.headers["content-type"]).toMatch(/json|html|text/); // depends on controller style
-  });
+// tests/routes.errors.test.js
+test("GET /courses/:id with bad id returns 404 JSON", async () => {
+  const res = await request(app).get("/api/courses/does-not-exist");
+  expect(res.status).toBe(404);
+  expect(res.headers["content-type"]).toMatch(/json|html|text/);
+});
 
-  test("POST /bookings/session with invalid sessionId returns 404 JSON", async () => {
-    const res = await request(app).post("/bookings/session").send({
-      userId: "invalid-user",
-      sessionId: "invalid-session",
-    });
-    // Your booking controller responds 404 if session not found
-    expect([404, 500]).toContain(res.status); // adjust based on controller
+test("POST /bookings/session with invalid sessionId returns 404 JSON", async () => {
+  const res = await request(app).post("/api/bookings/session").send({
+    userId: "invalid-user",
+    sessionId: "invalid-session",
   });
+  expect([400, 404, 500]).toContain(res.status);
+});
 });

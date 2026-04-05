@@ -1,2 +1,5 @@
-{"courseId":"S9agRYMKBwP8gtHj","startDateTime":"2026-05-12T11:00","endDateTime":"2026-05-12T12:00","capacity":15,"bookedCount":7,"_id":"cKKZ4oBR3eoKcfkN","location":"HQ","price":10}
 {"$$indexCreated":{"fieldName":"courseId","unique":false,"sparse":false}}
+{"courseId":"WHUFe5uc2NJhzN5c","startDateTime":"2026-02-02T18:30:00.000Z","endDateTime":"2026-02-02T19:45:00.000Z","capacity":18,"bookedCount":0,"location":"Studio 1","price":12.5,"_id":"xFMo2KkYrp1B2MLK"}
+{"courseId":"WHUFe5uc2NJhzN5c","startDateTime":"2026-02-09T18:30:00.000Z","endDateTime":"2026-02-09T19:45:00.000Z","capacity":18,"bookedCount":0,"location":"Studio 1","price":12.5,"_id":"QqAcOCQ8NU7dKKZj"}
+{"courseId":"pxxhij4F4YfDNT3Z","startDateTime":"2026-02-02T18:30:00.000Z","endDateTime":"2026-02-02T19:45:00.000Z","capacity":18,"bookedCount":0,"location":"Studio 1","price":12.5,"_id":"sZCkz8veLIlA1Xov"}
+{"courseId":"pxxhij4F4YfDNT3Z","startDateTime":"2026-02-09T18:30:00.000Z","endDateTime":"2026-02-09T19:45:00.000Z","capacity":18,"bookedCount":0,"location":"Studio 1","price":12.5,"_id":"RGTuOddHBliM9pk9"}

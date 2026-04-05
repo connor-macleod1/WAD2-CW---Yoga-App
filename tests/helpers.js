@@ -18,26 +18,21 @@ export async function resetDb() {
     sessionsDb.remove({}, { multi: true }),
     bookingsDb.remove({}, { multi: true }),
   ]);
-  await Promise.all([
-    usersDb.persistence.compactDatafile(),
-    coursesDb.persistence.compactDatafile(),
-    sessionsDb.persistence.compactDatafile(),
-    bookingsDb.persistence.compactDatafile(),
-  ]);
 }
 
-// Seed a minimal dataset used by multiple tests
 export async function seedMinimal() {
-  const student = await UserModel.create({
-    name: "Test Student",
-    email: "student@test.local",
-    role: "student",
-  });
-  const instructor = await UserModel.create({
-    name: "Test Instructor",
-    email: "instructor@test.local",
-    role: "instructor",
-  });
+  const student = await UserModel.create(
+    "Test Student",
+    "student@test.local",
+    "student",
+    "password123"
+  );
+  const instructor = await UserModel.create(
+    "Test Instructor",
+    "instructor@test.local",
+    "instructor",
+    "password123"
+  );
 
   const course = await CourseModel.create({
     title: "Test Course",
@@ -51,13 +46,14 @@ export async function seedMinimal() {
     description: "A test course for E2E route testing.",
   });
 
-  // Two sessions to keep tests fast
   const s1 = await SessionModel.create({
     courseId: course._id,
     startDateTime: new Date("2026-02-02T18:30:00").toISOString(),
     endDateTime: new Date("2026-02-02T19:45:00").toISOString(),
     capacity: 18,
     bookedCount: 0,
+    location: "Studio 1",
+    price: 12.50,
   });
 
   const s2 = await SessionModel.create({
@@ -66,6 +62,8 @@ export async function seedMinimal() {
     endDateTime: new Date("2026-02-09T19:45:00").toISOString(),
     capacity: 18,
     bookedCount: 0,
+    location: "Studio 1",
+    price: 12.50,
   });
 
   await CourseModel.update(course._id, { sessionIds: [s1._id, s2._id] });
