@@ -213,10 +213,26 @@ export async function updateCourse(id, body) {
   const course = await CourseModel.findById(id);
   if (!course) throw new Error("Course not found.");
 
+  // Validate required fields
+  if (!body.title || typeof body.title !== "string" || body.title.trim() === "") {
+    throw new Error("Course title is required.");
+  }
+  if (body.level && !["beginner", "intermediate", "advanced"].includes(body.level)) {
+    throw new Error("Level must be beginner, intermediate, or advanced.");
+  }
+  if (body.type && !["WEEKLY_BLOCK", "WEEKEND_WORKSHOP"].includes(body.type)) {
+    throw new Error("Type must be WEEKLY_BLOCK or WEEKEND_WORKSHOP.");
+  }
+
   const updatedData = {
-    name: body.name ?? course.name,
-    description: body.description ?? course.description,
-    duration: body.duration ?? course.duration,
+    title: body.title.trim(),
+    level: body.level ?? course.level,
+    type: body.type ?? course.type,
+    allowDropIn: body.allowDropIn === true || body.allowDropIn === "true",
+    startDate: body.startDate || null,
+    endDate: body.endDate || null,
+    description: body.description?.trim() || course.description,
+    instructorId: body.instructorId ?? course.instructorId,
   };
 
   return CourseModel.update(id, updatedData);

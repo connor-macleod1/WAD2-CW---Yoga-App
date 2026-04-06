@@ -125,7 +125,7 @@ async function createWeeklyBlock() {
       capacity: 18,
       bookedCount: 0,
       location: "Studio 2, Yoga Centre, Glasgow",
-      price: 12.50,
+      price: 12,
     });
     sessions.push(s);
   }
